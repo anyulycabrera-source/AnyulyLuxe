@@ -7,28 +7,28 @@ const MOCK_FEATURED_PRODUCTS = [
     id: '1',
     name: 'Anillo de Diamante Eternidad',
     price: 1250.00,
-    imageUrl: '/ring.png',
+    imageUrl: '/anillo.png',
     category: 'Anillos'
   },
   {
     id: '2',
     name: 'Collar Lágrima de Oro',
     price: 890.00,
-    imageUrl: '/banner.png',
+    imageUrl: '/collar.png',
     category: 'Collares'
   },
   {
     id: '3',
     name: 'Pulsera Clásica Cadenas',
     price: 540.00,
-    imageUrl: '/ring.png',
+    imageUrl: '/pulsera.png',
     category: 'Pulseras'
   },
   {
     id: '4',
     name: 'Aretes Perla Negra',
     price: 450.00,
-    imageUrl: '/banner.png',
+    imageUrl: '/aretes.png',
     category: 'Aretes'
   }
 ];

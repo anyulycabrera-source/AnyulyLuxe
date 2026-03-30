@@ -30,13 +30,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signInWithGoogle = async () => {
-    // Si no hay keys configuradas, mockeamos el login
-    if (auth.app.options.apiKey === "dummy") {
-      alert("Firebase no configurado. Logueo simulado.");
-      setUser({ uid: "mock-123", email: "demo@anyulyluxe.com", displayName: "Demo User" } as User);
-      return;
-    }
-    
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
@@ -45,11 +38,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
-    if (auth.app.options.apiKey === "dummy") {
-      setUser(null);
-      return;
-    }
-    
     try {
       await firebaseSignOut(auth);
     } catch (error) {
