@@ -1,121 +1,225 @@
 .container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 80px);
-  background-color: var(--color-background);
-  padding: 2rem;
+  background: linear-gradient(135deg, #ce2b76 0%, #872edb 100%);
+  overflow: hidden;
+}
+
+.bgBlob1 {
+  position: absolute;
+  top: -10%;
+  left: -5%;
+  width: 50%;
+  height: 60%;
+  background: linear-gradient(135deg, #f44498 0%, #a24bf4 100%);
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.85;
+  z-index: 1;
+  transform: rotate(30deg);
+}
+
+.bgBlob2 {
+  position: absolute;
+  bottom: -15%;
+  right: -5%;
+  width: 60%;
+  height: 60%;
+  background: linear-gradient(135deg, #e3186d 0%, #681fcc 100%);
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.bgBlob3 {
+  position: absolute;
+  top: 30%;
+  right: -10%;
+  width: 30%;
+  height: 40%;
+  background: linear-gradient(135deg, #ff6ba8 0%, #bc7aff 100%);
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.7;
+  z-index: 1;
 }
 
 .authBox {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  padding: 3rem;
-  width: 100%;
-  max-width: 450px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 10;
+  background-color: #ffffff;
+  border-radius: 35px;
+  padding: 3.5rem 2.5rem 3rem 2.5rem;
+  width: 90%;
+  max-width: 350px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .title {
-  font-family: var(--font-playfair), serif;
-  font-size: 2rem;
-  text-align: center;
-  color: var(--color-accent);
-  margin-bottom: 0.5rem;
-}
-
-.subtitle {
-  text-align: center;
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #4b42d7;
   margin-bottom: 2.5rem;
 }
 
 .formGroup {
-  margin-bottom: 1.5rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.formGroup label {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
 }
 
 .input {
-  background-color: var(--color-background);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  padding: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  font-family: var(--font-inter);
+  width: 100%;
+  background-color: #fafbfc;
+  border: 1px solid #ebf0f5;
+  border-radius: 50px;
+  padding: 16px 20px;
+  font-size: 0.85rem;
+  color: #333;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.3s;
+  text-align: center;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.input::placeholder {
+  color: #b0bac3;
 }
 
 .input:focus {
-  outline: none;
-  border-color: var(--color-accent);
-  background-color: #1a1a1a;
+  border-color: #4b42d7;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(75, 66, 215, 0.1);
 }
 
-.loginBtn {
+.rememberRow {
   width: 100%;
-  background-color: var(--color-text);
-  color: var(--color-primary-dark);
-  border: none;
-  padding: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 2rem;
+  padding-left: 0.5rem;
 }
 
-.loginBtn:hover {
-  background-color: var(--color-accent);
-}
-
-.divider {
+.rememberLabel {
   display: flex;
   align-items: center;
-  text-align: center;
-  margin: 2rem 0;
-  color: var(--color-text-muted);
-}
-
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.divider span {
-  padding: 0 10px;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-}
-
-.googleBtn {
-  width: 100%;
-  background-color: transparent;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  padding: 12px;
+  font-size: 0.75rem;
+  color: #a0aab8;
+  font-weight: 500;
   cursor: pointer;
+}
+
+.checkbox {
+  display: none;
+}
+
+.customCheck {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid #dce0e6;
+  margin-right: 8px;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.95rem;
-  font-family: var(--font-inter);
-  transition: all 0.3s ease;
+  background-color: transparent;
+  transition: all 0.2s;
 }
 
-.googleBtn:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: var(--color-text);
+.checkbox:checked + .customCheck {
+  border-color: #ee3486;
+}
+
+.checkbox:checked + .customCheck::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #ee3486;
+  border-radius: 50%;
+}
+
+.socialSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.socialText {
+  font-size: 0.65rem;
+  color: #aab2bd;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+}
+
+.socialButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialCircle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+}
+
+.socialCircle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.mainLoginBtn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(90deg, #5746ea 0%, #ee3c9f 100%);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 8px 25px rgba(214, 52, 142, 0.4);
+}
+
+.mainLoginBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.forgotPass {
+  font-size: 0.7rem;
+  color: #4b42d7;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgotPass:hover {
+  text-decoration: underline;
 }
