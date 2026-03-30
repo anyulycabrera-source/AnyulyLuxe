@@ -17,24 +17,10 @@ export default function AuthPage() {
   return (
     <div className={styles.container}>
       <div className={styles.authBox}>
-        <h1 className={styles.title}>Iniciar Sesión</h1>
-        <p className={styles.subtitle}>Accede a beneficios exclusivos de Anyuly Luxe.</p>
-        
-        <div className={styles.formGroup}>
-          <label>Email</label>
-          <input type="email" placeholder="Ingresa tu email" className={styles.input} />
-        </div>
-        
-        <div className={styles.formGroup}>
-          <label>Contraseña</label>
-          <input type="password" placeholder="Ingresa tu contraseña" className={styles.input} />
-        </div>
-        
-        <button className={styles.loginBtn}>Ingresar</button>
-        
-        <div className={styles.divider}>
-          <span>o</span>
-        </div>
+        <h1 className={styles.title}>Bienvenido a Anyuly Luxe</h1>
+        <p className={styles.subtitle} style={{ marginBottom: "2rem" }}>
+          Inicia sesión para descubrir nuestras colecciones de joyería fina.
+        </p>
         
         <button className={styles.googleBtn} onClick={signInWithGoogle}>
           <svg style={{ width: '18px', height: '18px', marginRight: '8px' }} viewBox="0 0 24 24" fill="none">
