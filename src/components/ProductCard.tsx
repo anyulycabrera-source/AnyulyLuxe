@@ -1,0 +1,60 @@
+"use client";
+import Link from 'next/link';
+import { ShoppingCart } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
+import styles from './ProductCard.module.css';
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  imageUrl: string;
+  category: string;
+}
+
+interface ProductCardProps {
+  product: Product;
+}
+
+export default function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      category: product.category
+    });
+    // Opcionalmente agregar toast feedback
+  };
+
+  return (
+    <div className={styles.card}>
+      <Link href={`/productos/${product.id}`} className={styles.imageContainer}>
+        <img 
+          src={product.imageUrl} 
+          alt={product.name} 
+          className={styles.image}
+        />
+        <div className={styles.overlay}>
+          <span className={styles.viewText}>Ver detalle</span>
+        </div>
+      </Link>
+      
+      <div className={styles.info}>
+        <span className={styles.category}>{product.category}</span>
+        <h3 className={styles.name}>
+          <Link href={`/productos/${product.id}`}>{product.name}</Link>
+        </h3>
+        <p className={styles.price}>${product.price.toFixed(2)} USD</p>
+        
+        <button className={styles.addToCartBtn} onClick={handleAddToCart}>
+          <ShoppingCart size={18} />
+          <span>Añadir</span>
+        </button>
+      </div>
+    </div>
+  );
+}
