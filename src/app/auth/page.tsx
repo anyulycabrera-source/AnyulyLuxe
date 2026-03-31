@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import styles from "./page.module.css";
 
 export default function AuthPage() {
-  const { user, signInWithGoogle, signInWithEmail } = useAuth();
+  const { user, signInWithGoogle, signInWithEmail, isConfigured } = useAuth();
   const router = useRouter();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -31,11 +31,28 @@ export default function AuthPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setError(null);
+    try {
+      await signInWithGoogle();
+    } catch (err: any) {
+      setError("Error con Google: " + (err.message || "Fallo en la conexión"));
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.bgBlob1}></div>
       <div className={styles.bgBlob2}></div>
       <div className={styles.bgBlob3}></div>
+
+      {!isConfigured && (
+        <div className={styles.configWarning}>
+          <h3>⚠️ Configuración Requerida</h3>
+          <p>Las llaves de Firebase son inválidas o están vacías.</p>
+          <p>Por favor, actualiza tu archivo <code>.env.local</code>.</p>
+        </div>
+      )}
 
       <div className={styles.authBox}>
         <h1 className={styles.title}>Log In</h1>
@@ -71,8 +88,8 @@ export default function AuthPage() {
         <div className={styles.socialSection}>
           <p className={styles.socialText}>Log in with social account</p>
           <div className={styles.socialButtons}>
-            {/* El botón de Google ahora es funcional y despliega las cuentas */}
-            <button type="button" className={styles.socialCircle} onClick={signInWithGoogle} title="Google">
+            {/* El botón de Google ahora muestra los errores en pantalla */}
+            <button type="button" className={styles.socialCircle} onClick={handleGoogleLogin} title="Google">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>

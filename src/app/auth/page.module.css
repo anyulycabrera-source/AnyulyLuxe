@@ -85,11 +85,56 @@
 }
 
 .errorMsg {
+  background-color: rgba(255, 77, 77, 0.1);
+  border: 1px solid rgba(255, 77, 77, 0.3);
   color: #ff4d4d;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   text-align: center;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  padding: 10px;
+  border-radius: 12px;
   font-weight: 500;
+  width: 100%;
+}
+
+.configWarning {
+  position: absolute;
+  top: 2rem;
+  background-color: rgba(212, 175, 55, 0.15);
+  border: 1px solid #d4af37;
+  padding: 1.5rem;
+  border-radius: 20px;
+  z-index: 20;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  max-width: 300px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.configWarning h3 {
+  color: #d4af37;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.configWarning p {
+  color: #ffffff;
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+  opacity: 0.9;
+}
+
+.configWarning code {
+  background: rgba(255,255,255,0.1);
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: #d4af37;
 }
 
 .input {

@@ -12,6 +12,7 @@ import { auth, googleProvider } from "@/lib/firebase";
 interface AuthContextProps {
   user: User | null;
   loading: boolean;
+  isConfigured: boolean;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -22,8 +23,15 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isConfigured, setIsConfigured] = useState(true);
 
   useEffect(() => {
+    // Check if keys are dummy
+    const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+    if (!apiKey || apiKey === "dummy" || apiKey.includes("your-api-key")) {
+      setIsConfigured(false);
+    }
+    
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
@@ -36,6 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error("Error signing in with Google", error);
+      throw error;
     }
   };
 
@@ -57,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signInWithEmail, signOut }}>
+    <AuthContext.Provider value={{ user, loading, isConfigured, signInWithGoogle, signInWithEmail, signOut }}>
       {children}
     </AuthContext.Provider>
   );
