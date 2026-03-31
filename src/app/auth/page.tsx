@@ -5,8 +5,11 @@ import { useAuth } from "@/context/AuthContext";
 import styles from "./page.module.css";
 
 export default function AuthPage() {
-  const { user, signInWithGoogle } = useAuth();
+  const { user, signInWithGoogle, signInWithEmail } = useAuth();
   const router = useRouter();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -14,10 +17,18 @@ export default function AuthPage() {
     }
   }, [user, router]);
 
-  const handleManualLogin = (e: React.FormEvent | React.MouseEvent) => {
+  const handleManualLogin = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault();
-    // Por ahora redirigimos al de Google de igual forma
-    signInWithGoogle();
+    setError(null);
+    if (!email || !password) {
+      setError("Por favor rellena todos los campos");
+      return;
+    }
+    try {
+      await signInWithEmail(email, password);
+    } catch (err: any) {
+      setError("Error al iniciar sesión: " + (err.message || "Credenciales inválidas"));
+    }
   };
 
   return (
@@ -30,8 +41,23 @@ export default function AuthPage() {
         <h1 className={styles.title}>Log In</h1>
         
         <form className={styles.formGroup} onSubmit={handleManualLogin}>
-          <input type="text" placeholder="login/e-mail" className={styles.input} />
-          <input type="password" placeholder="password" className={styles.input} />
+          <input 
+            type="email" 
+            placeholder="e-mail" 
+            className={styles.input} 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input 
+            type="password" 
+            placeholder="password" 
+            className={styles.input} 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          {error && <p className={styles.errorMsg}>{error}</p>}
         </form>
 
         <div className={styles.rememberRow}>
