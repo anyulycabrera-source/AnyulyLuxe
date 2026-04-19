@@ -1,0 +1,149 @@
+.container {
+  min-height: 100vh;
+  padding: 120px 20px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.checkoutGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 4rem;
+}
+
+@media (max-width: 900px) {
+  .checkoutGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-playfair), serif;
+  font-size: 1.5rem;
+  color: var(--color-accent);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fullWidth {
+  grid-column: span 2;
+}
+
+@media (max-width: 600px) {
+  .fullWidth {
+    grid-column: span 1;
+  }
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+}
+
+.input {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  padding: 12px;
+  color: #fff;
+  font-family: var(--font-inter), sans-serif;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.summary {
+  position: sticky;
+  top: 120px;
+  height: fit-content;
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  color: var(--color-text-muted);
+}
+
+.totalRow {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.submitBtn {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.cardIcon {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(212, 175, 55, 0.1);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

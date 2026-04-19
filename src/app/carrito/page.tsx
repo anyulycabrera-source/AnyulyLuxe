@@ -2,17 +2,17 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Trash2, Minus, Plus } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import styles from "./page.module.css";
 
 export default function CarritoPage() {
+  const router = useRouter();
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
 
   const handleCheckout = () => {
-    // In real app, write order to Firestore here
-    alert("¡Compra simulada exitosamente! Gracias por preferir Anyuly Luxe.");
-    clearCart();
+    router.push("/checkout");
   };
 
   return (

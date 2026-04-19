@@ -1,8 +1,8 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronLeft, ShoppingCart, Shield, Truck, RefreshCw } from 'lucide-react';
+import { ChevronLeft, ShoppingCart, Shield, Truck, RefreshCw, Minus, Plus } from 'lucide-react';
 import { MOCK_PRODUCTS } from '@/lib/data';
 import { useCart } from '@/context/CartContext';
 import styles from './page.module.css';
@@ -11,6 +11,7 @@ export default function ProductDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
   
   const product = MOCK_PRODUCTS.find(p => p.id === id);
 
@@ -35,8 +36,14 @@ export default function ProductDetailPage() {
       price: product.price,
       imageUrl: product.imageUrl,
       category: product.category
-    });
+    }, quantity);
+    
+    // Smooth scroll to top or show success feedback can be added here
+    alert(`Añadido: ${quantity} x ${product.name}`);
   };
+
+  const incrementQty = () => setQuantity(prev => prev + 1);
+  const decrementQty = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
 
   return (
     <div className={styles.container}>
@@ -65,6 +72,19 @@ export default function ProductDetailPage() {
               Cada detalle ha sido cuidadosamente esculpido para capturar la luz y la esencia de la elegancia eterna. 
               Fabricado con materiales de la más alta calidad y gemas seleccionadas a mano por nuestros expertos gemólogos.
             </p>
+          </div>
+
+          <div className={styles.quantitySelector}>
+            <span className={styles.quantityLabel}>CANTIDAD</span>
+            <div className={styles.quantityControls}>
+              <button className={styles.qtyBtn} onClick={decrementQty}>
+                <Minus size={16} />
+              </button>
+              <span className={styles.qtyValue}>{quantity}</span>
+              <button className={styles.qtyBtn} onClick={incrementQty}>
+                <Plus size={16} />
+              </button>
+            </div>
           </div>
 
           <div className={styles.actions}>
