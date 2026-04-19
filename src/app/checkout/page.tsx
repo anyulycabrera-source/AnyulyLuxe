@@ -16,6 +16,7 @@ export default function CheckoutPage() {
   const { user } = useAuth();
   
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.displayName || "",
@@ -31,6 +32,14 @@ export default function CheckoutPage() {
     cvv: ""
   });
 
+  const loadingSteps = [
+    "Validando disponibilidad de piezas...",
+    "Estableciendo conexión segura con el banco...",
+    "Encriptando datos transaccionales...",
+    "Generando certificado de autenticidad...",
+    "Finalizando su adquisición de lujo..."
+  ];
+
   if (items.length === 0 && !loading) {
     return (
       <div className={styles.container} style={{ textAlign: "center" }}>
@@ -42,12 +51,50 @@ export default function CheckoutPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    let formattedValue = value;
+    
+    // Card Number Formatting: 0000 0000 0000 0000
+    if (name === "cardNumber") {
+      formattedValue = value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
+    }
+    
+    // Expiry Formatting: MM/YY
+    if (name === "expiry") {
+      formattedValue = value.replace(/\D/g, "");
+      if (formattedValue.length >= 2) {
+        formattedValue = formattedValue.slice(0, 2) + "/" + formattedValue.slice(2, 4);
+      }
+    }
+    
+    // CVV and others: only digits for some
+    if (name === "cvv" || name === "zip" || name === "phone") {
+      formattedValue = value.replace(/\D/g, "");
+    }
+
+    setFormData(prev => ({ ...prev, [name]: formattedValue }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Basic validation
+    if (formData.cardNumber.replace(/\s/g, "").length < 16) {
+      alert("Por favor ingrese un número de tarjeta válido.");
+      return;
+    }
+    if (formData.expiry.length < 5) {
+      alert("Por favor ingrese una fecha de expiración válida (MM/YY).");
+      return;
+    }
+
     setLoading(true);
+    setLoadingStep(0);
+
+    // Simulate high-end processing steps
+    const stepInterval = setInterval(() => {
+      setLoadingStep(prev => (prev < loadingSteps.length - 1 ? prev + 1 : prev));
+    }, 1500);
 
     try {
       // 1. Prepare order data
@@ -64,12 +111,12 @@ export default function CheckoutPage() {
           name: item.name,
           price: item.price,
           quantity: item.quantity,
-          imageUrl: item.imageUrl
+          imageUrl: item.imageUrl,
+          category: item.category || "Joyería"
         })),
         total: totalPrice,
         status: "pending",
         createdAt: serverTimestamp(),
-        // We DON'T save full card number for security, just last 4 for reference in this simulation
         paymentMethod: {
           type: "card",
           last4: formData.cardNumber.slice(-4)
@@ -80,10 +127,16 @@ export default function CheckoutPage() {
       const docRef = await addDoc(collection(db, "orders"), orderData);
       console.log("Pedido guardado con ID: ", docRef.id);
 
-      // 3. Clear cart and redirect
-      clearCart();
-      router.push("/checkout/success");
+      // Give a bit more time for the last step animation
+      setTimeout(() => {
+        clearInterval(stepInterval);
+        // 3. Clear cart and redirect with ID
+        clearCart();
+        router.push(`/checkout/success?id=${docRef.id}`);
+      }, 2000);
+      
     } catch (error) {
+      clearInterval(stepInterval);
       console.error("Error al procesar la compra:", error);
       alert("Hubo un error al procesar tu compra. Por favor intenta de nuevo.");
       setLoading(false);
@@ -94,8 +147,14 @@ export default function CheckoutPage() {
     <div className={styles.container}>
       {loading && (
         <div className={styles.loadingOverlay}>
-          <div className={styles.spinner}></div>
-          <p>Procesando tu orden exclusiva...</p>
+          <div className={styles.premiumLoader}>
+            <div className={styles.spinner}></div>
+            <div className={styles.loadingPulse}></div>
+          </div>
+          <p className={styles.loadingText}>{loadingSteps[loadingStep]}</p>
+          <span className={styles.secureBadge}>
+            <ShieldCheck size={14} /> Conexión Encriptada de 256 bits
+          </span>
         </div>
       )}
 

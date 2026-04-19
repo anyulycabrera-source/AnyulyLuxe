@@ -144,6 +144,48 @@
   margin-bottom: 1rem;
 }
 
+.premiumLoader {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.loadingPulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px;
+  height: 70px;
+  border: 1px solid var(--color-accent);
+  border-radius: 50%;
+  animation: pulse 2s ease-out infinite;
+  opacity: 0;
+}
+
+@keyframes pulse {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+
+.loadingText {
+  font-family: var(--font-playfair), serif;
+  font-size: 1.2rem;
+  color: #fff;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+.secureBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }

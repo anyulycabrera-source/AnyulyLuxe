@@ -24,7 +24,27 @@ const CartContext = createContext<CartContextProps | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
-  // Use a flag to wait for hydration to read from localStorage if needed. Let's keep it simple for now.
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem("anyuly_luxe_cart");
+    if (savedCart) {
+      try {
+        setItems(JSON.parse(savedCart));
+      } catch (e) {
+        console.error("Error parsing cart from localStorage", e);
+      }
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Save cart to localStorage whenever items change
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem("anyuly_luxe_cart", JSON.stringify(items));
+    }
+  }, [items, isHydrated]);
 
   const addToCart = (product: Omit<CartItem, "quantity">, quantity: number = 1) => {
     setItems((prev) => {
@@ -52,10 +72,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = () => {
+    setItems([]);
+    localStorage.removeItem("anyuly_luxe_cart");
+  };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  // Avoid hydration mismatch by not rendering until hydrated
+  if (!isHydrated) {
+    return null; // Or a loading spinner if preferred
+  }
 
   return (
     <CartContext.Provider
