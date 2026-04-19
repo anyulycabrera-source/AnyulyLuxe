@@ -12,6 +12,7 @@ import styles from "./page.module.css";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import StripePaymentForm from "@/components/StripePaymentForm";
+import DemoPaymentForm from "@/components/DemoPaymentForm";
 
 // Initialize Stripe outside of component to avoid recreation
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
