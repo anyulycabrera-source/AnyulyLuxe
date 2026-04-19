@@ -12,6 +12,7 @@ export default function CarritoPage() {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
 
   const handleCheckout = () => {
+    // Redirigir al proceso de pago real (Checkout)
     router.push("/checkout");
   };
 
