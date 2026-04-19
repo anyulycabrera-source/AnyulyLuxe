@@ -1,23 +1,30 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { CreditCard, Truck, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Truck, ArrowLeft, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import InvoiceModal from "@/components/InvoiceModal";
 import styles from "./page.module.css";
 
+// Stripe Imports
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import StripePaymentForm from "@/components/StripePaymentForm";
+
+// Initialize Stripe outside of component to avoid recreation
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
+
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, totalPrice } = useCart();
   const { user } = useAuth();
   
-  const [loading, setLoading] = useState(false);
-  const [loadingStep, setLoadingStep] = useState(0);
+  const [clientSecret, setClientSecret] = useState("");
+  const [loadingIntent, setLoadingIntent] = useState(false);
   const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
+  
   const [formData, setFormData] = useState({
     name: user?.displayName || "",
     email: user?.email || "",
@@ -26,21 +33,30 @@ export default function CheckoutPage() {
     zip: "",
     country: "México",
     phone: "",
-    cardName: "",
-    cardNumber: "",
-    expiry: "",
-    cvv: ""
   });
 
-  const loadingSteps = [
-    "Validando disponibilidad de piezas...",
-    "Estableciendo conexión segura con el banco...",
-    "Encriptando datos transaccionales...",
-    "Generando certificado de autenticidad...",
-    "Finalizando su adquisición de lujo..."
-  ];
+  // 1. Create Payment Intent as soon as the page loads or cart changes
+  useEffect(() => {
+    if (items.length > 0) {
+      setLoadingIntent(true);
+      fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.clientSecret) {
+            setClientSecret(data.clientSecret);
+          } else {
+            console.error("Error generating client secret:", data.error);
+          }
+        })
+        .finally(() => setLoadingIntent(false));
+    }
+  }, [items]);
 
-  if (items.length === 0 && !loading) {
+  if (items.length === 0) {
     return (
       <div className={styles.container} style={{ textAlign: "center" }}>
         <h1 className={styles.title}>Tu carrito está vacío</h1>
@@ -51,113 +67,29 @@ export default function CheckoutPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
-    let formattedValue = value;
-    
-    // Card Number Formatting: 0000 0000 0000 0000
-    if (name === "cardNumber") {
-      formattedValue = value.replace(/\D/g, "").replace(/(.{4})/g, "$1 ").trim();
-    }
-    
-    // Expiry Formatting: MM/YY
-    if (name === "expiry") {
-      formattedValue = value.replace(/\D/g, "");
-      if (formattedValue.length >= 2) {
-        formattedValue = formattedValue.slice(0, 2) + "/" + formattedValue.slice(2, 4);
-      }
-    }
-    
-    // CVV and others: only digits for some
-    if (name === "cvv" || name === "zip" || name === "phone") {
-      formattedValue = value.replace(/\D/g, "");
-    }
-
-    setFormData(prev => ({ ...prev, [name]: formattedValue }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (formData.cardNumber.replace(/\s/g, "").length < 16) {
-      alert("Por favor ingrese un número de tarjeta válido.");
-      return;
-    }
-    if (formData.expiry.length < 5) {
-      alert("Por favor ingrese una fecha de expiración válida (MM/YY).");
-      return;
-    }
+  const appearance = {
+    theme: 'night' as const,
+    variables: {
+      colorPrimary: '#d4af37',
+      colorBackground: '#1a1a1a',
+      colorText: '#ffffff',
+      colorDanger: '#df1b41',
+      fontFamily: 'Ideal Sans, system-ui, sans-serif',
+      spacingUnit: '4px',
+      borderRadius: '8px',
+    },
+  };
 
-    setLoading(true);
-    setLoadingStep(0);
-
-    // Simulate high-end processing steps
-    const stepInterval = setInterval(() => {
-      setLoadingStep(prev => (prev < loadingSteps.length - 1 ? prev + 1 : prev));
-    }, 1500);
-
-    try {
-      // 1. Prepare order data
-      const orderData = {
-        userId: user?.uid || "guest",
-        customer: {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          address: `${formData.address}, ${formData.city}, ${formData.zip}, ${formData.country}`
-        },
-        items: items.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          imageUrl: item.imageUrl,
-          category: item.category || "Joyería"
-        })),
-        total: totalPrice,
-        status: "pending",
-        createdAt: serverTimestamp(),
-        paymentMethod: {
-          type: "card",
-          last4: formData.cardNumber.slice(-4)
-        }
-      };
-
-      // 2. Save to Firestore
-      const docRef = await addDoc(collection(db, "orders"), orderData);
-      console.log("Pedido guardado con ID: ", docRef.id);
-
-      // Give a bit more time for the last step animation
-      setTimeout(() => {
-        clearInterval(stepInterval);
-        // 3. Clear cart and redirect with ID
-        clearCart();
-        router.push(`/checkout/success?id=${docRef.id}`);
-      }, 2000);
-      
-    } catch (error) {
-      clearInterval(stepInterval);
-      console.error("Error al procesar la compra:", error);
-      alert("Hubo un error al procesar tu compra. Por favor intenta de nuevo.");
-      setLoading(false);
-    }
+  const options = {
+    clientSecret,
+    appearance,
   };
 
   return (
     <div className={styles.container}>
-      {loading && (
-        <div className={styles.loadingOverlay}>
-          <div className={styles.premiumLoader}>
-            <div className={styles.spinner}></div>
-            <div className={styles.loadingPulse}></div>
-          </div>
-          <p className={styles.loadingText}>{loadingSteps[loadingStep]}</p>
-          <span className={styles.secureBadge}>
-            <ShieldCheck size={14} /> Conexión Encriptada de 256 bits
-          </span>
-        </div>
-      )}
-
       <header style={{ marginBottom: "2rem" }}>
         <Link href="/carrito" className={styles.backBtn} style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none", color: "var(--color-accent)" }}>
           <ArrowLeft size={18} />
@@ -167,7 +99,7 @@ export default function CheckoutPage() {
 
       <h1 className={styles.title}>Finalizar Compra</h1>
 
-      <form onSubmit={handleSubmit} className={styles.checkoutGrid}>
+      <div className={styles.checkoutGrid}>
         <div className={styles.formsColumn}>
           {/* Shipping Information */}
           <section className={styles.section}>
@@ -236,57 +168,25 @@ export default function CheckoutPage() {
             </div>
           </section>
 
-          {/* Payment Information */}
+          {/* Payment Information - REAL STRIPE INTEGRATION */}
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>
-              <CreditCard size={24} />
-              Método de Pago
+              <ShieldCheck size={24} />
+              Método de Pago Seguro
             </h2>
-            <div className={styles.cardIcon}>
-              <div style={{ width: "40px", height: "25px", background: "#333", borderRadius: "4px" }}></div>
-              <div style={{ width: "40px", height: "25px", background: "#333", borderRadius: "4px" }}></div>
-              <div style={{ width: "40px", height: "25px", background: "#333", borderRadius: "4px" }}></div>
-            </div>
-            <div className={styles.formGrid}>
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className={styles.label}>Nombre en la Tarjeta</label>
-                <input 
-                  type="text" name="cardName" required 
-                  className={styles.input} value={formData.cardName} 
-                  onChange={handleInputChange} 
-                />
+            
+            {clientSecret ? (
+              <Elements options={options} stripe={stripePromise}>
+                <StripePaymentForm />
+              </Elements>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '2rem' }}>
+                <div className={styles.spinner}></div>
+                <p style={{ marginTop: '1rem', color: 'var(--color-text-muted)' }}>
+                  Estableciendo conexión segura con la pasarela de pagos...
+                </p>
               </div>
-              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                <label className={styles.label}>Número de Tarjeta</label>
-                <input 
-                  type="text" name="cardNumber" required 
-                  className={styles.input} value={formData.cardNumber} 
-                  placeholder="0000 0000 0000 0000"
-                  maxLength={19}
-                  onChange={handleInputChange} 
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label className={styles.label}>Fecha Expiración</label>
-                <input 
-                  type="text" name="expiry" required 
-                  className={styles.input} value={formData.expiry} 
-                  placeholder="MM/YY"
-                  maxLength={5}
-                  onChange={handleInputChange} 
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label className={styles.label}>CVV</label>
-                <input 
-                  type="password" name="cvv" required 
-                  className={styles.input} value={formData.cvv} 
-                  placeholder="***"
-                  maxLength={4}
-                  onChange={handleInputChange} 
-                />
-              </div>
-            </div>
+            )}
           </section>
         </div>
 
@@ -311,25 +211,16 @@ export default function CheckoutPage() {
               <span>${totalPrice.toFixed(2)} USD</span>
             </div>
             
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "1.5rem 0", fontSize: "0.8rem", color: "var(--color-text-muted)" }}>
-              <ShieldCheck size={16} color="var(--color-accent)" />
-              Pago 100% seguro y encriptado
-            </div>
-
-            <button type="submit" className="btn-gold" style={{ width: "100%", padding: "18px" }} disabled={loading}>
-              {loading ? "Procesando..." : "Finalizar Compra"}
-            </button>
-
             <button 
               type="button" 
               onClick={() => setIsInvoiceOpen(true)}
-              style={{ width: "100%", marginTop: "10px", background: "none", border: "1px solid var(--color-accent)", color: "var(--color-accent)", padding: "10px", cursor: "pointer", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "1px" }}
+              style={{ width: "100%", marginTop: "20px", background: "none", border: "1px solid var(--color-accent)", color: "var(--color-accent)", padding: "10px", cursor: "pointer", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "1px" }}
             >
-              Previsualizar Factura
+              Previsualizar Detalles
             </button>
           </div>
         </aside>
-      </form>
+      </div>
 
       <InvoiceModal 
         isOpen={isInvoiceOpen} 
