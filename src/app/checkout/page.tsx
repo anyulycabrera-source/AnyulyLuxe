@@ -185,20 +185,7 @@ export default function CheckoutPage() {
                 <StripePaymentForm />
               </Elements>
             ) : stripeError === "STRIPE_NOT_CONFIGURED" ? (
-              <div style={{ 
-                padding: '2rem', 
-                background: 'rgba(212, 175, 55, 0.1)', 
-                border: '1px solid var(--color-accent)', 
-                borderRadius: '8px',
-                textAlign: 'center'
-              }}>
-                <ShieldCheck size={40} color="var(--color-accent)" style={{ marginBottom: '1rem' }} />
-                <h3 style={{ color: 'var(--color-accent)', marginBottom: '0.5rem' }}>Configuración Requerida</h3>
-                <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
-                  La pasarela de pagos segura aún no ha sido activada con tus claves de Stripe. 
-                  Por favor, añade tu <strong>Secret Key</strong> y <strong>Publishable Key</strong> al archivo <code>.env</code> para habilitar las compras reales.
-                </p>
-              </div>
+              <DemoPaymentForm />
             ) : (
               <div style={{ textAlign: 'center', padding: '2rem' }}>
                 <div className={styles.spinner}></div>
