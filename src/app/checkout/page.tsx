@@ -7,6 +7,7 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { CreditCard, Truck, ShieldCheck, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import InvoiceModal from "@/components/InvoiceModal";
 import styles from "./page.module.css";
 
 export default function CheckoutPage() {
@@ -15,6 +16,7 @@ export default function CheckoutPage() {
   const { user } = useAuth();
   
   const [loading, setLoading] = useState(false);
+  const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.displayName || "",
     email: user?.email || "",
@@ -255,12 +257,32 @@ export default function CheckoutPage() {
               Pago 100% seguro y encriptado
             </div>
 
-            <button type="submit" className="btn-gold" style={{ width: "100%", padding: "18px" }}>
-              Finalizar Compra
+            <button type="submit" className="btn-gold" style={{ width: "100%", padding: "18px" }} disabled={loading}>
+              {loading ? "Procesando..." : "Finalizar Compra"}
+            </button>
+
+            <button 
+              type="button" 
+              onClick={() => setIsInvoiceOpen(true)}
+              style={{ width: "100%", marginTop: "10px", background: "none", border: "1px solid var(--color-accent)", color: "var(--color-accent)", padding: "10px", cursor: "pointer", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "1px" }}
+            >
+              Previsualizar Factura
             </button>
           </div>
         </aside>
       </form>
+
+      <InvoiceModal 
+        isOpen={isInvoiceOpen} 
+        onClose={() => setIsInvoiceOpen(false)} 
+        items={items.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          category: item.category || "Joyería",
+          quantity: item.quantity
+        }))} 
+      />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronLeft, ShoppingCart, Shield, Truck, RefreshCw, Minus, Plus } from 'lucide-react';
 import { MOCK_PRODUCTS } from '@/lib/data';
 import { useCart } from '@/context/CartContext';
+import InvoiceModal from '@/components/InvoiceModal';
 import styles from './page.module.css';
 
 export default function ProductDetailPage() {
@@ -12,6 +13,7 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
   
   const product = MOCK_PRODUCTS.find(p => p.id === id);
 
@@ -38,8 +40,7 @@ export default function ProductDetailPage() {
       category: product.category
     }, quantity);
     
-    // Smooth scroll to top or show success feedback can be added here
-    alert(`Añadido: ${quantity} x ${product.name}`);
+    setIsInvoiceOpen(true);
   };
 
   const incrementQty = () => setQuantity(prev => prev + 1);
@@ -119,6 +120,12 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      <InvoiceModal 
+        isOpen={isInvoiceOpen} 
+        onClose={() => setIsInvoiceOpen(false)} 
+        items={[{ ...product, quantity }]} 
+      />
     </div>
   );
 }
