@@ -12,12 +12,13 @@ export interface CartItem {
 
 interface CartContextProps {
   items: CartItem[];
-  addToCart: (product: Omit<CartItem, "quantity">) => void;
+  addToCart: (product: Omit<CartItem, "quantity">, quantity?: number) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  isHydrated: boolean;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -80,14 +81,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  // Avoid hydration mismatch by not rendering until hydrated
-  if (!isHydrated) {
-    return null; // Or a loading spinner if preferred
-  }
-
   return (
     <CartContext.Provider
-      value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice }}
+      value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalPrice, isHydrated }}
     >
       {children}
     </CartContext.Provider>
