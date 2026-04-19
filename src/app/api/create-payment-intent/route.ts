@@ -10,7 +10,13 @@ export async function POST(req: Request) {
   try {
     const { items } = await req.json();
 
-    // 1. SECURE PRICE CALCULATION
+    // 0. CHECK FOR PLACEHOLDER KEYS
+    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes("tus_datos_aqui")) {
+      return NextResponse.json(
+        { error: "STRIPE_NOT_CONFIGURED" },
+        { status: 400 }
+      );
+    }
     // Never trust the total sent from the frontend.
     const calculateOrderAmount = (cartItems: any[]) => {
       return cartItems.reduce((total, item) => {
