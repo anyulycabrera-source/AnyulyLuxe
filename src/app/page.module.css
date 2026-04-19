@@ -11,10 +11,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url('/banner.png');
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
+}
+
+.heroImage {
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
 }
 
 .heroOverlay {

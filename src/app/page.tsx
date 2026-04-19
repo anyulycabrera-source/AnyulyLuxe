@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import ProductCard from '@/components/ProductCard';
 import styles from './page.module.css';
 
@@ -37,6 +38,13 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
+        <Image 
+          src="/banner.png" 
+          alt="Anyuly Luxe Banner" 
+          fill 
+          priority 
+          className={styles.heroImage}
+        />
         <div className={styles.heroOverlay}></div>
         <div className={styles.heroContent}>
           <h1 className={`${styles.heroTitle} fade-in`}>
