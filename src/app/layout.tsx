@@ -33,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning className={`${inter.variable} ${playfair.variable} ${inter.className} ${playfair.className}`}>
-      <body>
+      <body suppressHydrationWarning>
         <AuthProvider>
           <CartProvider>
             <AuthGuard>
