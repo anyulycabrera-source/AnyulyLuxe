@@ -75,22 +75,22 @@ export default function ContactoPage() {
               <div className={styles.contactItem}>
                 <div className={styles.iconWrapper}><Phone size={20} /></div>
                 <div>
-                  <span className={styles.itemLabel}>Teléfono</span>
-                  <p className={styles.itemValue}>+52 (55) LUXE-01</p>
+                  <span className={styles.itemLabel}>Teléfono / WhatsApp</span>
+                  <p className={styles.itemValue}>+504 9898-9898</p>
                 </div>
               </div>
               <div className={styles.contactItem}>
                 <div className={styles.iconWrapper}><Mail size={20} /></div>
                 <div>
                   <span className={styles.itemLabel}>Correo Electrónico</span>
-                  <p className={styles.itemValue}>contacto@anyulyluxe.com</p>
+                  <p className={styles.itemValue}>anyuly.luxe@gmail.com</p>
                 </div>
               </div>
               <div className={styles.contactItem}>
                 <div className={styles.iconWrapper}><MapPin size={20} /></div>
                 <div>
                   <span className={styles.itemLabel}>Ubicación</span>
-                  <p className={styles.itemValue}>Venta Online - CDMX, México</p>
+                  <p className={styles.itemValue}>Comayagua, Honduras</p>
                 </div>
               </div>
               <div className={styles.contactItem}>
@@ -109,13 +109,13 @@ export default function ContactoPage() {
               Tu satisfacción es nuestra prioridad. Encuéntranos en nuestras plataformas sociales.
             </p>
             <div className={styles.socialGrid}>
-              <a href="#" className={styles.socialLink} aria-label="WhatsApp">
+              <a href="https://wa.me/50498989898" target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="WhatsApp">
                 <MessageCircle size={20} />
               </a>
-              <a href="#" className={styles.socialLink} aria-label="Instagram">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="Instagram">
                 <Instagram size={20} />
               </a>
-              <a href="#" className={styles.socialLink} aria-label="Facebook">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink} aria-label="Facebook">
                 <Facebook size={20} />
               </a>
             </div>
