@@ -8,7 +8,10 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   useEffect(() => {
-    if (!loading && !user && pathname !== "/auth") {
+    const publicRoutes = ["/", "/productos", "/contacto", "/auth"];
+    const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith("/productos/");
+
+    if (!loading && !user && !isPublicRoute) {
       router.push("/auth");
     }
   }, [user, loading, pathname, router]);

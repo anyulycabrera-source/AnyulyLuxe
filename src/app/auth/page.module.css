@@ -1,14 +1,12 @@
 .container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 100;
+  min-height: calc(100vh - 80px);
+  padding-top: 80px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background: linear-gradient(135deg, #0a0a0a 0%, #000000 100%);
+  position: relative;
   overflow: hidden;
 }
 
