@@ -13,6 +13,7 @@ export default function Navbar() {
         <nav className={styles.navLinks}>
           <Link href="/" className={styles.link}>Inicio</Link>
           <Link href="/productos" className={styles.link}>Productos</Link>
+          <Link href="/contacto" className={styles.link}>Contacto</Link>
         </nav>
 
         <div className={styles.logoContainer}>
