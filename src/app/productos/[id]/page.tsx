@@ -65,7 +65,7 @@ export default function ProductDetailPage() {
         <div className={styles.infoSection}>
           <span className={styles.category}>{product.category}</span>
           <h1 className={styles.title}>{product.name}</h1>
-          <p className={styles.price}>${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })} USD</p>
+          <p className={styles.price}>L. {product.price.toLocaleString('en-HN', { minimumFractionDigits: 2 })} HNL</p>
           
           <div className={styles.description}>
             <p>

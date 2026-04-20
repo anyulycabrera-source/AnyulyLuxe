@@ -144,7 +144,7 @@ export default function DemoPaymentForm() {
               Procesando adquisición...
             </>
           ) : (
-            `Finalizar Adquisición de Lujo ($${totalPrice.toFixed(2)})`
+            `Finalizar Adquisición de Lujo (L. ${totalPrice.toLocaleString()})`
           )}
         </button>
 

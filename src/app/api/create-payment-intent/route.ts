@@ -31,13 +31,13 @@ export async function POST(req: Request) {
     const amount = calculateOrderAmount(items);
 
     // Stripe expects amount in cents/smallest currency unit
-    // USD $10.00 -> 1000 cents
+    // HNL L. 10.00 -> 1000 cents
     const amountInCents = Math.round(amount * 100);
 
     // 2. CREATE PAYMENT INTENT
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInCents,
-      currency: "usd",
+      currency: "hnl",
       automatic_payment_methods: {
         enabled: true,
       },

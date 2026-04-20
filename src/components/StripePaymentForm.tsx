@@ -89,7 +89,7 @@ export default function StripePaymentForm() {
         style={{ width: "100%", padding: "18px", marginTop: "1rem" }}
       >
         <span id="button-text">
-          {isLoading ? "Procesando adquisición..." : `Pagar $${totalPrice.toFixed(2)} USD`}
+          {isLoading ? "Procesando adquisición..." : `Pagar L. ${totalPrice.toLocaleString()} HNL`}
         </span>
       </button>
 

@@ -207,7 +207,7 @@ export default function CheckoutPage() {
               {items.map(item => (
                 <div key={item.id} className={styles.summaryItem}>
                   <span>{item.quantity}x {item.name}</span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  <span>L. {(item.price * item.quantity).toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -217,7 +217,7 @@ export default function CheckoutPage() {
             </div>
             <div className={`${styles.summaryItem} ${styles.totalRow}`}>
               <span>Total</span>
-              <span>${totalPrice.toFixed(2)} USD</span>
+              <span>L. {totalPrice.toLocaleString()} HNL</span>
             </div>
             
             <button 

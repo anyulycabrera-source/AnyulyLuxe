@@ -89,9 +89,9 @@ export default function InvoiceModal({ isOpen, onClose, items }: InvoiceModalPro
                   <td>{item.category}</td>
                   <td>{item.name}</td>
                   <td>{item.quantity}</td>
-                  <td>${item.price.toLocaleString()}</td>
-                  <td>$0.00</td>
-                  <td>${(item.price * item.quantity).toLocaleString()}</td>
+                  <td>L. {item.price.toLocaleString()}</td>
+                  <td>L. 0.00</td>
+                  <td>L. {(item.price * item.quantity).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
@@ -116,7 +116,7 @@ export default function InvoiceModal({ isOpen, onClose, items }: InvoiceModalPro
         <div className={styles.totalSection}>
           <div className={styles.totalRow}>
             <span className={styles.totalLabel}>Suma Global:</span>
-            <span className={styles.totalValue}>${subtotal.toLocaleString()} USD</span>
+            <span className={styles.totalValue}>L. {subtotal.toLocaleString()} HNL</span>
           </div>
         </div>
 

@@ -48,7 +48,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <h3 className={styles.name}>
           <Link href={`/productos/${product.id}`}>{product.name}</Link>
         </h3>
-        <p className={styles.price}>${product.price.toFixed(2)} USD</p>
+        <p className={styles.price}>L. {product.price.toLocaleString('en-HN', { minimumFractionDigits: 2 })} HNL</p>
         
         <button className={styles.addToCartBtn} onClick={handleAddToCart}>
           <ShoppingCart size={18} />

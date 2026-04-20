@@ -42,7 +42,7 @@ export default function CarritoPage() {
                   <div className={styles.itemInfo}>
                     <span className={styles.category}>{item.category}</span>
                     <h3 className={styles.name}>{item.name}</h3>
-                    <p className={styles.price}>${item.price.toFixed(2)}</p>
+                    <p className={styles.price}>L. {item.price.toLocaleString()}</p>
                   </div>
                   <div className={styles.quantityControls}>
                     <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>
@@ -54,7 +54,7 @@ export default function CarritoPage() {
                     </button>
                   </div>
                   <div className={styles.itemTotal}>
-                    ${(item.price * item.quantity).toFixed(2)}
+                    L. {(item.price * item.quantity).toLocaleString()}
                   </div>
                   <div className={styles.itemRemove}>
                     <button onClick={() => removeFromCart(item.id)} className={styles.removeBtn}>
@@ -69,7 +69,7 @@ export default function CarritoPage() {
               <h2>Resumen del Pedido</h2>
               <div className={styles.summaryRow}>
                 <span>Subtotal</span>
-                <span>${totalPrice.toFixed(2)} USD</span>
+                <span>L. {totalPrice.toLocaleString()} HNL</span>
               </div>
               <div className={styles.summaryRow}>
                 <span>Envío</span>
@@ -78,7 +78,7 @@ export default function CarritoPage() {
               <div className={styles.summaryDivider}></div>
               <div className={`${styles.summaryRow} ${styles.totalRow}`}>
                 <span>Total</span>
-                <span>${totalPrice.toFixed(2)} USD</span>
+                <span>L. {totalPrice.toLocaleString()} HNL</span>
               </div>
               <button className="btn-gold" style={{ width: "100%", marginTop: "1.5rem" }} onClick={handleCheckout}>
                 Proceder al Pago
