@@ -1,6 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import styles from './ProductCard.module.css';
 
@@ -31,7 +32,13 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className={styles.card}>
+    <motion.div 
+      className={styles.card}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       <Link href={`/productos/${product.id}`} className={styles.imageContainer}>
         <img 
           src={product.imageUrl} 
@@ -55,6 +62,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span>Añadir</span>
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }

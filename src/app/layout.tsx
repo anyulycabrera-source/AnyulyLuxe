@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   description: "Descubre la elegancia en cada detalle. Tienda online de joyería premium.",
 };
 
+import PageTransition from "@/components/PageTransition";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +39,9 @@ export default function RootLayout({
             <AuthGuard>
               <div className="main-container">
                 <Navbar />
-                <main style={{ flex: 1 }}>{children}</main>
+                <main style={{ flex: 1 }}>
+                  <PageTransition>{children}</PageTransition>
+                </main>
                 <Footer />
               </div>
             </AuthGuard>
