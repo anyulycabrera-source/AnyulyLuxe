@@ -140,7 +140,7 @@ export default function DemoPaymentForm() {
         >
           {isLoading ? (
             <>
-              <div className={styles.spinner} style={{ width: '20px', height: '20px', borderSecondary: '2px' }}></div>
+              <div className={styles.spinner} style={{ width: '20px', height: '20px', borderWidth: '2px' }}></div>
               Procesando adquisición...
             </>
           ) : (

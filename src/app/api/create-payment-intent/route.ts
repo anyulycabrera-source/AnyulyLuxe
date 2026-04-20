@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { MOCK_PRODUCTS } from "@/lib/data";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-01-27ts", // Using current stable API version
+  apiVersion: "2026-03-25.dahlia", // Using current stable API version
 });
 
 export async function POST(req: Request) {
